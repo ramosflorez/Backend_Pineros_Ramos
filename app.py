@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, redirect, render_template
-from Config.db import app
+from config.db import app
 
 
 @app.route("/")
