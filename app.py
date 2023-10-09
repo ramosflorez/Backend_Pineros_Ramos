@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify, redirect, render_template
 from config.db import app
+from api.Usuarios.apiUsuarios import ruta_usuario
 
+
+app.register_blueprint(ruta_usuario, url_prefix = "/api" )
 
 @app.route("/")
 def index():
