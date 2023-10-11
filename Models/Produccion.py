@@ -5,17 +5,17 @@ class Produccion(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer, db.ForeignKey('tblusuario.id'))
-    id_producto = db.Column(db.Integer, db.ForeignKey('tblproducto.id'))
     fecha = db.Column(db.DateTime)
     cantidad = db.Column(db.String(20))
+    estado = db.Column(db.Boolean)
     total = db.Column(db.Float)
 
-    def __init__(self, id, id_usuario, id_producto, fecha, cantidad, total):
+    def __init__(self, id, id_usuario, fecha, cantidad, estado, total):
         self.id = id
         self.id_usuario = id_usuario
-        self.id_producto = id_producto
         self.fecha = fecha
         self.cantidad = cantidad
+        self.estado = estado
         self.total = total
 
 with app.app_context():
@@ -23,4 +23,4 @@ with app.app_context():
 
 class ProduccionSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'id_usuario', 'id_producto', 'fecha', 'cantidad', 'total')
+        fields = ('id', 'id_usuario','fecha', 'cantidad', 'estado', 'total')

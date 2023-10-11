@@ -7,6 +7,7 @@ ruta_produccion = Blueprint("routes_produccion", __name__)
 produccion_schema   = ProduccionSchema()
 producciones_schemas = ProduccionSchema(many=True)
 
+#ruta para obtener, crear y eliminar registros de produccion
 @ruta_produccion.route('/produccion', methods=['GET', 'POST', 'DELETE'])
 def produccion():
     if request.method == 'GET':
@@ -17,12 +18,12 @@ def produccion():
     if request.method == 'POST':
         id = request.json['id']
         id_usuario = request.json['id_usuario']
-        id_producto = request.json['id_producto']
         fecha = request.json['fecha']
         cantidad = request.json['cantidad']
+        estado = request.json['estado']
         total = request.json['total']
 
-        nuevo_produccion = Produccion(id=id, id_usuario=id_usuario, id_producto=id_producto, fecha=fecha, cantidad=cantidad, total=total)
+        nuevo_produccion = Produccion(id=id, id_usuario=id_usuario, fecha=fecha, cantidad=cantidad, estado=estado, total=total)
 
         db.session.add(nuevo_produccion)
         db.session.commit()

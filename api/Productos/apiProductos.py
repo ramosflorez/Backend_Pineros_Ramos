@@ -7,6 +7,7 @@ ruta_producto = Blueprint("routes_producto", __name__)
 producto_schema   = ProductoSchema()
 productos_schemas = ProductoSchema(many=True)
 
+#ruta para obtener, crear y eliminar registros de productos
 @ruta_producto.route('/productos', methods=['GET', 'POST', 'DELETE'])
 def productos():
     if request.method == 'GET':
@@ -19,9 +20,8 @@ def productos():
         nombre = request.json['nombre']
         descripcion = request.json['descripcion']
         precio = request.json['precio']
-        rol = request.json['rol']
 
-        nuevo_producto = Producto(id=id, nombre=nombre, descripcion=descripcion, precio=precio, rol=rol)
+        nuevo_producto = Producto(id=id, nombre=nombre, descripcion=descripcion, precio=precio)
 
         db.session.add(nuevo_producto)
         db.session.commit()
