@@ -16,17 +16,19 @@ def productos():
         return jsonify(resultProductos)
     
     if request.method == 'POST':
-        id = request.json['id']
         nombre = request.json['nombre']
         descripcion = request.json['descripcion']
         precio = request.json['precio']
 
-        nuevo_producto = Producto(id=id, nombre=nombre, descripcion=descripcion, precio=precio)
-
+        nuevo_producto = Producto(nombre=nombre, descripcion=descripcion, precio=precio)
+        result=producto_schema.jsonify(nuevo_producto)
         db.session.add(nuevo_producto)
         db.session.commit()
 
-        return producto_schema.jsonify(nuevo_producto)
+        return {
+            "mensaje": "Producto creado",
+            "producto": result.__repr__()
+        } 
     
     if request.method == 'DELETE':
         id = request.json['id']

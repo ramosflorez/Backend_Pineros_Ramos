@@ -35,7 +35,6 @@ def usuarios():
         return jsonify(resultUsuarios)
     
     if request.method == 'POST':
-        id = request.json['id']
         nombre = request.json['nombre']
         email = request.json['email']
         password = request.json['password']
@@ -44,12 +43,16 @@ def usuarios():
         #aplica la función de hashing (bcrypt) a la contraseña almacenada en la variable password
         password = bcrypt.generate_password_hash(password)
 
-        nuevo_usuario = Usuario(id=id, nombre=nombre, email=email, password=password, rol=rol)
+        nuevo_usuario = Usuario(nombre=nombre, email=email, password=password, rol=rol)
+        result=usuario_schema.jsonify(nuevo_usuario)   
 
         db.session.add(nuevo_usuario)
         db.session.commit()
 
-        return usuario_schema.jsonify(nuevo_usuario)
+        return {
+            "message": "User created",
+            "user": result.__repr__()
+        } 
     
     if request.method == 'DELETE':
         id = request.json['id']

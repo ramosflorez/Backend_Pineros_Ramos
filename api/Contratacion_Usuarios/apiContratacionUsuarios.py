@@ -16,13 +16,12 @@ def contratacion():
         return jsonify(resultContratacion)
     
     if request.method == 'POST':
-        id = request.json['id']
         id_usuario = request.json['id_usuario']
         id_producto = request.json['id_producto']
         rol = request.json['rol']
         descripcion = request.json['descripcion']
 
-        nuevo_contratacion = ContratacionUsuario(id=id, id_usuario=id_usuario, id_producto=id_producto, rol=rol, descripcion=descripcion)
+        nuevo_contratacion = ContratacionUsuario(id_usuario=id_usuario, id_producto=id_producto, rol=rol, descripcion=descripcion)
 
         db.session.add(nuevo_contratacion)
         db.session.commit()

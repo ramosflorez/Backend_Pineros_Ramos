@@ -16,14 +16,13 @@ def factura():
         return jsonify(resultFactura)
     
     if request.method == 'POST':
-        id = request.json['id']
         id_usuario = request.json['id_usuario']
         produccion = request.json['produccion']
         id_det_produccion = request.json['id_det_produccion']
         fecha = request.json['fecha']
         monto_total = request.json['monto_total']
 
-        nuevo_factura = Facturacion(id=id, id_usuario=id_usuario, produccion=produccion, id_det_produccion=id_det_produccion, fecha=fecha, monto_total=monto_total)
+        nuevo_factura = Facturacion(id_usuario=id_usuario, produccion=produccion, id_det_produccion=id_det_produccion, fecha=fecha, monto_total=monto_total)
 
         db.session.add(nuevo_factura)
         db.session.commit()

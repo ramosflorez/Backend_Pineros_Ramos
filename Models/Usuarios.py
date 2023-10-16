@@ -3,14 +3,13 @@ from config.db import ma, db, app
 class Usuario(db.Model):
     __tablename__ = "tblusuario"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column(db.String(255))
     email = db.Column(db.String(255))
     password = db.Column(db.String(255))
     rol = db.Column(db.String(20))
 
-    def __init__(self, id, nombre, email, password, rol):
-        self.id = id
+    def __init__(self, nombre, email, password, rol):
         self.nombre = nombre
         self.email = email
         self.password = password
