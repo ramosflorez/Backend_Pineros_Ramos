@@ -27,7 +27,7 @@ def produccion():
     if request.method == 'POST':
         
         id_usuario = request.json["produccion"]['id_usuario']
-        fecha = datetime.now().strftime('%Y-%m-%d')
+        fecha = "2023-10-15"
         cantidad = request.json["produccion"]['cantidad']
         id_producto= request.json["detalle"]['id_producto']
         nombre =request.json["detalle"]['nombre']
@@ -37,13 +37,13 @@ def produccion():
         compensacion= 0.12 if cantidad==12 else 0.00
 
         #obtener el precio por el producto individual
-        producto=Producto.query.filter(Producto.id==id_producto).all()
+        producto=Producto.query.filter(Producto.id==id_producto).first()
         precio= producto.precio
 
         #obtener todas las producciones
         producciones=Produccion.query.filter((Produccion.estado == 0) & (Produccion.fecha == "2023-10-15")).all()
 
-        if len(resultProduccion)>0:
+        if len(producciones)>0:
             for produccion in producciones:
                 detalle_produccion= Detalle_Produccion.query.filter(Detalle_Produccion.id_produccion == produccion.id).all()
                 if(detalle_produccion[0].id_producto==id_producto):
