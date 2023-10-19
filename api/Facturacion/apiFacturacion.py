@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, request, jsonify, session, render_template
+from api.Usuarios.apiUsuarios import token_required
 from config.db import app, db, ma
 from Models.Facturacion import Facturacion, FacturacionSchema
 
@@ -9,7 +10,8 @@ facturas_schemas = FacturacionSchema(many=True)
 
 #ruta para obtener, crear y eliminar registros de facturas
 @ruta_factura.route('/factura', methods=['GET', 'POST', 'DELETE'])
-def factura():
+@token_required
+def factura(current_user):
     if request.method == 'GET':
         resultall = factura.query.all()
         resultFactura = facturas_schemas.dump(resultall)

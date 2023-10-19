@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, request, jsonify, session, render_template
+from api.Usuarios.apiUsuarios import token_required
 from config.db import app, db, ma
 from Models.Contratacion_Usuarios import ContratacionUsuario, ContratacionUsuarioSchema
 
@@ -9,7 +10,8 @@ contrataciones_schemas = ContratacionUsuarioSchema(many=True)
 
 #ruta para obtener, crear y eliminar registros de la tabla contratacion
 @ruta_contratacion.route('/contratacion', methods=['GET', 'POST', 'DELETE'])
-def contratacion():
+@token_required
+def contratacion(current_user):
     if request.method == 'GET':
         resultall = ContratacionUsuario.query.all()
         resultContratacion = contrataciones_schemas.dump(resultall)

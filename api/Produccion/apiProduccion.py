@@ -1,5 +1,6 @@
 import datetime
 from flask import Blueprint, redirect, request, jsonify, session, render_template
+from api.Usuarios.apiUsuarios import token_required
 from config.db import app, db, ma
 from Models.Produccion import Produccion, ProduccionSchema
 from Models.Detalle_Produccion import Detalle_Produccion, DetalleProduccionSchema
@@ -18,7 +19,8 @@ productos_schemas = ProductoSchema(many=True)
 
 #ruta para obtener, crear y eliminar registros de produccion
 @ruta_produccion.route('/produccion', methods=['GET', 'POST', 'DELETE'])
-def produccion():
+@token_required
+def produccion(current_user):
     if request.method == 'GET':
         resultall = Produccion.query.all()
         resultProduccion = producciones_schemas.dump(resultall)

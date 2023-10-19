@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, request, jsonify, session, render_template
+from api.Usuarios.apiUsuarios import token_required
 from config.db import app, db, ma
 from Models.Detalle_Produccion import Detalle_Produccion, DetalleProduccionSchema
 
@@ -9,7 +10,8 @@ detproducciones_schemas = DetalleProduccionSchema(many=True)
 
 #ruta para obtener, crear y eliminar registros de la tabla detalle_produccion
 @ruta_detproduccion.route('/detproduccion', methods=['GET', 'POST', 'DELETE'])
-def detproduccion():
+@token_required
+def detproduccion(current_user):
     if request.method == 'GET':
         resultall = Detalle_Produccion.query.all()
         resultDetProduccion = detproducciones_schemas.dump(resultall)
