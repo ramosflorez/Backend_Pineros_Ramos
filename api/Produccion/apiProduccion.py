@@ -5,6 +5,7 @@ from config.db import app, db, ma
 from Models.Produccion import Produccion, ProduccionSchema
 from Models.Detalle_Produccion import Detalle_Produccion, DetalleProduccionSchema
 from Models.Productos import Producto, ProductoSchema
+from datetime import date
 
 ruta_produccion = Blueprint("routes_produccion", __name__)
 
@@ -34,6 +35,9 @@ def produccion(current_user):
         id_producto= request.json["detalle"]['id_producto']
         nombre =request.json["detalle"]['nombre']
         total=0.000
+
+
+        print("holaaa", date.today().isoformat())
           
         # Calcular compensación
         compensacion= 0.12 if cantidad==12 else 0.00
@@ -62,10 +66,10 @@ def produccion(current_user):
                         #actualizaciones de la tabla produccion
                         total=precio*produccion.cantidad
                         produccion.compensacion=compensacion
-                        produccion.total+=((total * compensacion) + total)
+                        produccion.total=((total * compensacion) + total)
                         if(produccion.cantidad==12):
                             produccion.compensacion=0.12
-                            produccion.estado=True
+                            produccion.estado=1
 
                         db.session.commit()
                         total=0.000
@@ -80,6 +84,8 @@ def produccion(current_user):
                  nuevo_detproduccion = Detalle_Produccion(id_produccion=nuevo_produccion.id, id_producto=id_producto, nombre=nombre, fecha=fecha)
                  db.session.add(nuevo_detproduccion)
                  db.session.commit()
+            nuevo_produccion.total=((nuevo_produccion.cantidad * precio) * nuevo_produccion) + (nuevo_produccion.cantidad * precio)
+            db.session.commit()
                  
         return {"mensaje":"Produccion creada"}
     
