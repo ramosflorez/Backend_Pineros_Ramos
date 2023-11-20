@@ -30,7 +30,7 @@ def produccion(current_user):
     if request.method == 'POST':
         
         id_usuario = request.json["produccion"]['id_usuario']
-        fecha = "2023-10-15"
+        fecha = date.today().isoformat()
         cantidad = request.json["produccion"]['cantidad']
         id_producto= request.json["detalle"]['id_producto']
         nombre =request.json["detalle"]['nombre']
@@ -47,7 +47,7 @@ def produccion(current_user):
         precio= producto.precio
 
         #obtener todas las producciones
-        producciones=Produccion.query.filter((Produccion.estado == 0) & (Produccion.fecha == "2023-10-15")).all()
+        producciones=Produccion.query.filter((Produccion.estado == 0) & (Produccion.fecha == fecha)).all()
 
         if len(producciones)>0:
             for produccion in producciones:
@@ -84,7 +84,7 @@ def produccion(current_user):
                  nuevo_detproduccion = Detalle_Produccion(id_produccion=nuevo_produccion.id, id_producto=id_producto, nombre=nombre, fecha=fecha)
                  db.session.add(nuevo_detproduccion)
                  db.session.commit()
-            nuevo_produccion.total=((nuevo_produccion.cantidad * precio) * nuevo_produccion) + (nuevo_produccion.cantidad * precio)
+            nuevo_produccion.total=((nuevo_produccion.cantidad * precio) * nuevo_produccion.compensacion) + (nuevo_produccion.cantidad * precio)
             db.session.commit()
                  
         return {"mensaje":"Produccion creada"}

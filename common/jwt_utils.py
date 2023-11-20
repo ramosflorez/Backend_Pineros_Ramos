@@ -22,7 +22,7 @@ def jwt_token_generate(payload: dict):
             "nombre": payload['nombre'],
             "rol": payload['rol'],
             "email": payload['email'],
-            "exp": due_date_generate(days=0, seconds=30),
+            "exp": due_date_generate(days=1, seconds=30),
         })
 
         token = jwt.encode(user, SECRET_KEY, algorithm="HS256")
