@@ -6,6 +6,10 @@ from api.Produccion.apiProduccion import ruta_produccion
 from api.Detalle_Produccion.apiDetalleProduccion import ruta_detproduccion
 from api.Facturacion.apiFacturacion import ruta_factura
 from api.Contratacion_Usuarios.apiContratacionUsuarios import ruta_contratacion
+from flask_cors import CORS
+
+cors = CORS(app)
+app.config['CORS_HEADERS']='Content-Type'
 
 app.register_blueprint(ruta_usuario)
 app.register_blueprint(auth_bp)
