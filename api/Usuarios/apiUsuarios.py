@@ -76,8 +76,8 @@ def login(id):
     else:
         return jsonify(message='Credenciales incorrectas'), 401
 
-#ruta para obtener, crear y eliminar usuarios
-@ruta_usuario.route('/usuarios', methods=['GET', 'POST', 'DELETE'])
+#ruta para obtener y eliminar usuarios
+@ruta_usuario.route('/usuarios', methods=['GET', 'DELETE'])
 @admin_required
 def usuarios(current_user):
     if request.method == 'GET':
@@ -85,30 +85,32 @@ def usuarios(current_user):
         resultUsuarios = usuarios_schemas.dump(resultall)
         return jsonify(resultUsuarios)
     
-    if request.method == 'POST':
-        
-        nombre = request.json['nombre']
-        email = request.json['email']
-        password = request.json['password']
-        rol = request.json['rol']
-
-        #aplica la función de hashing (bcrypt) a la contraseña almacenada en la variable password
-        password = bcrypt.generate_password_hash(password)
-
-        nuevo_usuario = Usuario(nombre=nombre, email=email, password=password, rol=rol)
-        result=usuario_schema.jsonify(nuevo_usuario)   
-
-        db.session.add(nuevo_usuario)
-        db.session.commit()
-
-        return {
-            "message": "User created",
-            "user": result.__repr__()
-        } 
-    
     if request.method == 'DELETE':
         id = request.json['id']
         usuario = Usuario.query.get(id)
         db.session.delete(usuario)
         db.session.commit()
         return usuario_schema.jsonify(usuario)
+
+# Ruta para acceder a la creación de usuarios sin validación de token
+@ruta_usuario.route('/nuevousuario', methods=['POST'])
+def crear_usuarios():
+
+    nombre = request.json['nombre']
+    email = request.json['email']
+    password = request.json['password']
+    rol = request.json['rol']
+
+    #aplica la función de hashing (bcrypt) a la contraseña almacenada en la variable password
+    password = bcrypt.generate_password_hash(password)
+
+    nuevo_usuario = Usuario(nombre=nombre, email=email, password=password, rol=rol)
+    result=usuario_schema.jsonify(nuevo_usuario)   
+
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    return {
+        "message": "User created",
+        "user": result.__repr__()
+    } 
