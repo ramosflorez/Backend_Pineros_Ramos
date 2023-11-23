@@ -91,19 +91,44 @@ def produccion(current_user):
                     
             return {"mensaje":"Produccion creada"}
     
-        if request.method == 'DELETE':
-            id = request.json['id']
-            produccion = Produccion.query.get(id)
-            db.session.delete(produccion)
-            db.session.commit()
-            return produccion_schema.jsonify(produccion)
-    
     except SQLAlchemyError as e:
             # Log the error for debugging purposes
             print(f"SQLAlchemy Error: {str(e)}")
 
             # Devuelve un mensaje de error como JSON
             return jsonify({"error": "Error de base de datos"}), 500
+
+    except Exception as e:
+        # Log the general exception for debugging purposes
+        print(f"An unexpected error occurred: {str(e)}")
+
+        # Devuelve un mensaje de error como JSON
+        return jsonify({"error": "Error inesperado"}), 500
+
+# Ruta para eliminar producción y su detalle asociado
+@ruta_produccion.route('/produccion', methods=['DELETE'])
+@token_required
+def delete_production_and_details(current_user):
+    try:
+        # Obtén el ID de la producción desde el cuerpo de la solicitud
+        production_id = request.json['id']
+
+        # Elimina los detalles de producción asociados a la producción
+        Detalle_Produccion.query.filter_by(id_produccion=production_id).delete()
+
+        # Luego, elimina la producción en sí
+        produccion = Produccion.query.get(production_id)
+        db.session.delete(produccion)
+        db.session.commit()
+
+        return produccion_schema.jsonify(produccion)
+
+    except SQLAlchemyError as e:
+        # Log the error for debugging purposes
+        print(f"SQLAlchemy Error: {str(e)}")
+
+        # Devuelve un mensaje de error como JSON
+        return jsonify({"error": "Error de base de datos"}), 500
 
     except Exception as e:
         # Log the general exception for debugging purposes
