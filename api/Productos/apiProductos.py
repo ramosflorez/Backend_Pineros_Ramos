@@ -39,3 +39,18 @@ def productos(current_user):
         db.session.delete(producto)
         db.session.commit()
         return producto_schema.jsonify(producto)
+    
+    if request.method == 'PUT':
+        id = request.json.get('id')  
+        producto = Producto.query.get(id)
+
+        if not producto:
+            return jsonify({"message": "Producto no encontrado"}), 404
+
+        producto.nombre = request.json.get('nombre', producto.nombre)
+        producto.descripcion = request.json.get('descripcion', producto.descripcion)
+        producto.precio = request.json.get('precio', producto.precio)
+        
+        db.session.commit()
+
+        return producto_schema.jsonify(producto)

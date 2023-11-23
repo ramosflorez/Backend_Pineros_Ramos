@@ -62,22 +62,24 @@ def token_required(func):
 
 
 #ruta para autenticación (login)
-@auth_bp.route('/login/<id>', methods=['POST'])
-def login(id):
+@auth_bp.route('/login', methods=['POST'])
+def login():
     data = request.get_json()
+    username = data.get('username')
     password = data.get('password')
 
-    usuario = Usuario.query.filter_by(id=id).first()
+    # Realizar la autenticación y obtener el ID del usuario
+    user = Usuario.query.filter_by(email=username).first()
 
-    if usuario and bcrypt.check_password_hash(usuario.password, password):
-        #print(usuario.to_dict())
-        respuesta = jwt_token_generate(usuario.to_dict())
-        return jsonify(respuesta)
-    else:
-        return jsonify(message='Credenciales incorrectas'), 401
+    if user and bcrypt.check_password_hash(user.password, password):
+        # Generar el token y devolverlo como respuesta
+        token = jwt_token_generate(user.to_dict())
+        return jsonify(token)
+
+    return jsonify({'message': 'Credenciales incorrectas'}), 401
 
 #ruta para obtener y eliminar usuarios
-@ruta_usuario.route('/usuarios', methods=['GET', 'DELETE'])
+@ruta_usuario.route('/usuarios', methods=['GET', 'DELETE', 'PUT'])
 @admin_required
 def usuarios(current_user):
     if request.method == 'GET':
@@ -92,7 +94,19 @@ def usuarios(current_user):
         db.session.commit()
         return usuario_schema.jsonify(usuario)
 
-# Ruta para acceder a la creación de usuarios sin validación de token
+    if request.method == 'PUT':
+        id = request.json.get('id')  
+        usuario = Usuario.query.get(id)
+
+        if not usuario:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+
+        usuario.rol = request.json.get('rol', usuario.rol)
+
+        db.session.commit()
+
+        return usuario_schema.jsonify(usuario)
+
 @ruta_usuario.route('/nuevousuario', methods=['POST'])
 def crear_usuarios():
 
