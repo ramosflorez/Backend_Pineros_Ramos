@@ -10,7 +10,7 @@ producto_schema   = ProductoSchema()
 productos_schemas = ProductoSchema(many=True)
 
 #ruta para obtener, crear y eliminar registros de productos
-@ruta_producto.route('/productos', methods=['GET', 'POST', 'DELETE'])
+@ruta_producto.route('/productos', methods=['GET', 'POST', 'DELETE', 'PUT'])
 @admin_required
 def productos(current_user):
     if request.method == 'GET':
