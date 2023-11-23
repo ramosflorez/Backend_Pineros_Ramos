@@ -21,9 +21,10 @@ def productos(current_user):
     if request.method == 'POST':
         nombre = request.json['nombre']
         descripcion = request.json['descripcion']
+        rol = request.json['rol']
         precio = request.json['precio']
 
-        nuevo_producto = Producto(nombre=nombre, descripcion=descripcion, precio=precio)
+        nuevo_producto = Producto(nombre=nombre, descripcion=descripcion, rol=rol, precio=precio)
         result=producto_schema.jsonify(nuevo_producto)
         db.session.add(nuevo_producto)
         db.session.commit()
@@ -49,6 +50,7 @@ def productos(current_user):
 
         producto.nombre = request.json.get('nombre', producto.nombre)
         producto.descripcion = request.json.get('descripcion', producto.descripcion)
+        producto.rol = request.json.get('rol', producto.rol)
         producto.precio = request.json.get('precio', producto.precio)
         
         db.session.commit()
