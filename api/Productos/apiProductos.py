@@ -9,15 +9,16 @@ ruta_producto = Blueprint("routes_producto", __name__)
 producto_schema   = ProductoSchema()
 productos_schemas = ProductoSchema(many=True)
 
+@ruta_producto.route('/productos', methods=['GET'])
+def get_productos():
+    resultall = Producto.query.all()
+    resultProductos = productos_schemas.dump(resultall)
+    return jsonify(resultProductos)
+
 #ruta para obtener, crear y eliminar registros de productos
-@ruta_producto.route('/productos', methods=['GET', 'POST', 'DELETE', 'PUT'])
+@ruta_producto.route('/productos', methods=['POST', 'DELETE', 'PUT'])
 @admin_required
-def productos(current_user):
-    if request.method == 'GET':
-        resultall = Producto.query.all()
-        resultProductos = productos_schemas.dump(resultall)
-        return jsonify(resultProductos)
-    
+def productos(current_user):    
     if request.method == 'POST':
         nombre = request.json['nombre']
         descripcion = request.json['descripcion']
